@@ -14,7 +14,7 @@
 ## Paper Link
 
 **Preprint available on SSRN**: [https://ssrn.com/abstract=xxxxxxx](https://ssrn.com/abstract=xxxxxxx)
-*This paper is currently under review at Automation in Construction.*
+*This paper is currently under review.
 
 ## Model Description
 
@@ -87,12 +87,11 @@ These results confirm FACS-Net's superiority in segmenting very fine cracks, whi
 ## Citation
 
 ```bibtex
-@article{Joo2025FACSNet,
-  title   = {Frequency-Aware Crack Segmentation Network (FACS-Net) for Thin-Cracks via Topology Preservation},
-  author  = {Siheon Joo and Seokhwan Kim and Hongjo Kim},
-  journal = {Automation in Construction},
-  year    = {2025},
-  note    = {Under review. Preprint available on SSRN}
+@unpublished{Joo2025FACSNet,
+  title     = {Frequency-Aware Crack Segmentation Network (FACS-Net) for Thin-Cracks via Topology Preservation},
+  author    = {Siheon Joo and Seokhwan Kim and Hongjo Kim},
+  note      = {Manuscript under review. Preprint available at SSRN: \url{https://ssrn.com/abstract/XXXXXXX}},
+  year      = {2025}
 }
 ```
 
