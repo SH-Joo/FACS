@@ -9,7 +9,7 @@
 * **Frequency-Aware Design:** A novel segmentation network that counteracts spectral bias by explicitly learning high-frequency crack features.
 * **Topology Preservation:** A custom **Crack Topology Loss (CT-Loss)** that enforces crack connectivity and continuous thin structures in the predicted masks.
 * **State-of-the-Art Performance:** On the **CrackVision12K** benchmark, FACS-Net significantly outperforms prior models on thin cracks (IoU improved by 0.306 and CTS by 0.360) and sets new overall best scores (IoU 0.663, CTS 0.651).
-* **Exceptional Thin Crack Detection:** On the thinnest cracks (\u2264 2px), FACS-Net outperforms previous state-of-the-art methods by a large margin, achieving +0.306 IoU and +0.360 CTS gains over the best existing model. This highlights the effectiveness of FACS-Net's frequency-aware design in the most challenging cases.
+* **Exceptional Thin Crack Detection:** On the thinnest cracks (≤ 2px), FACS-Net outperforms previous state-of-the-art methods by a large margin, achieving +0.306 IoU and +0.360 CTS gains over the best existing model. This highlights the effectiveness of FACS-Net's frequency-aware design in the most challenging cases.
 
 ## Paper Link
 
