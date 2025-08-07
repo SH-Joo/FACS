@@ -60,12 +60,12 @@ git clone https://github.com/yourusername/FACS-Net.git
 
 ### Performance on Extremely Thin Cracks (≤ 2px in CrackVision12K)
 
-| Crack Width (px) | Model            | IoU       | CTS       |
-| ---------------- | ---------------- | --------- | --------- |
-| **0 < τ ≤ 2**    | **FACS-Net**     | **0.466** | **0.945** |
-|                  | Hybrid-Segmentor | 0.160     | 0.585     |
-|                  | DECS-Net         | 0.275     | 0.896     |
-|                  | FCN              | 0.136     | 0.717     |
+| Model            | IoU       | CTS       |
+| ---------------- | --------- | --------- |
+| **FACS-Net**     | **0.466** | **0.945** |
+| Hybrid-Segmentor | 0.160     | 0.585     |
+| DECS-Net         | 0.275     | 0.896     |
+| FCN              | 0.136     | 0.717     |
 
 FACS-Net shows **exceptional performance** on the most challenging thin-crack range (τ ≤ 2 px):
 
