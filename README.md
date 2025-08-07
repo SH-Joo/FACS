@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**FACS-Net** is a deep learning framework targeting the **segmentation of thin structural cracks** in images, a crucial task for infrastructure safety monitoring. Traditional crack segmentation models often suffer from **spectral bias**, meaning they favor low-frequency (coarse) features and struggle with high-frequency details like very thin cracks. This leads to fragmented or missed detections of fine cracks, compromising the analysis of crack continuity and topology. FACS-Net directly addresses this issue with a two-fold strategy: a **frequency-aware architecture** and a **topology-preserving loss function**. The result is a model that more reliably detects **thin cracks (width \u2264 2px)** and maintains their connectivity in segmentation outputs.
+**FACS-Net** is a deep learning framework targeting the **segmentation of thin structural cracks** in images, a crucial task for infrastructure safety monitoring. Traditional crack segmentation models often suffer from **spectral bias**, meaning they favor low-frequency (coarse) features and struggle with high-frequency details like very thin cracks. This leads to fragmented or missed detections of fine cracks, compromising the analysis of crack continuity and topology. FACS-Net directly addresses this issue with a two-fold strategy: a **frequency-aware architecture** and a **topology-preserving loss function**. The result is a model that more reliably detects **thin cracks (width ≤ 2px)** and maintains their connectivity in segmentation outputs.
 
 ### Highlights
 
