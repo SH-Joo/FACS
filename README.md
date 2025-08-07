@@ -51,12 +51,12 @@ git clone https://github.com/yourusername/FACS-Net.git
 
 ### Overall Performance on CrackVision12K
 
-| Model            | IoU   | CL-IoU (δ=4) | CTS   |
-| ---------------- | ----- | ------------ | ----- |
-| **FACS-Net**     | 0.663 | 0.657        | 0.651 |
-| Hybrid-Segmentor | 0.625 | 0.398        | 0.619 |
-| DECS-Net         | 0.564 | 0.381        | 0.626 |
-| FCN              | 0.610 | 0.372        | 0.614 |
+| Model            | IoU   | CTS   |
+| ---------------- | ----- | ----- |
+| **FACS-Net**     | 0.663 | 0.651 |
+| Hybrid-Segmentor | 0.625 | 0.619 |
+| DECS-Net         | 0.564 | 0.626 |
+| FCN              | 0.610 | 0.614 |
 
 ### Performance on Extremely Thin Cracks (≤ 2px in CrackVision12K)
 
