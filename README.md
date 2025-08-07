@@ -81,8 +81,7 @@ These results confirm FACS-Net's superiority in segmenting very fine cracks, whi
 
 ## Pretrained Models & Results
 
-* 🔗 Model Weights: [figshare placeholder](https://figshare.com/xxxxx)
-* 🔗 Experimental Results & Logs: [figshare placeholder](https://figshare.com/yyyyy)
+* 🔗 Model Weights & Outputs: [figshare](https://doi.org/10.6084/m9.figshare.29849432)
 
 ## Citation
 
