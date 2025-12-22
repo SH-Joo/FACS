@@ -31,7 +31,7 @@ FACS-Net consists of a **hybrid encoder** and a **frequency-aware decoder**:
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/FACS-Net.git
+git clone https://github.com/yourusername/FACS.git
 ```
 
 ## Datasets & Training
