@@ -82,17 +82,6 @@ These results confirm FACS-Net's superiority in segmenting very fine cracks, whi
 
 * 🔗 Model Weights & Outputs: [figshare](https://doi.org/10.6084/m9.figshare.29849432)
 
-## Citation
-
-```bibtex
-@unpublished{Joo2025FACSNet,
-  title     = {Frequency-Aware Crack Segmentation Network (FACS-Net) for Thin-Cracks via Topology Preservation},
-  author    = {Siheon Joo and Seokhwan Kim and Hongjo Kim},
-  note      = {Manuscript under review. Preprint available at SSRN: \url{https://ssrn.com/abstract/XXXXXXX}},
-  year      = {2025}
-}
-```
-
 ## License & Disclaimer
 
 This code is released for **research and academic use only**.
