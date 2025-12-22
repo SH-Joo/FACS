@@ -13,7 +13,7 @@
 
 ## Paper Link
 
-**Paper (Automation in Construction)**: [https://ssrn.com/abstract=xxxxxxx](https://doi.org/10.1016/j.autcon.2025.106719)
+**Paper (Automation in Construction)**: [https://doi.org/10.1016/j.autcon.2025.106719](https://doi.org/10.1016/j.autcon.2025.106719)
 
 ## Model Description
 
