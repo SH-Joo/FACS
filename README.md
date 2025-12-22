@@ -1,4 +1,4 @@
-# FACS-Net: Frequency-Aware Crack Segmentation Network for Thin Cracks via Topology Preservation
+# Frequency-aware crack segmentation network (FACS-net) and crack topology loss (CT-loss) for thin cracks
 
 ## Introduction
 
@@ -13,8 +13,7 @@
 
 ## Paper Link
 
-**Preprint available on SSRN**: [https://ssrn.com/abstract=xxxxxxx](https://ssrn.com/abstract=xxxxxxx)
-*This paper is currently under review.
+**Paper (Automation in Construction)**: [https://ssrn.com/abstract=xxxxxxx](https://doi.org/10.1016/j.autcon.2025.106719)
 
 ## Model Description
 
