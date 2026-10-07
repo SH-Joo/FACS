@@ -2,7 +2,7 @@ import os
 import importlib
 
 def CrackVision12K(args, mode, path):
-  folderName = "split_dataset_final"
+  folderName = "CrackVision12K"
 
   path = os.path.join(path, folderName)
 
@@ -10,37 +10,37 @@ def CrackVision12K(args, mode, path):
       if args.testmode == 0:
         mode = "test"
       else:
-        mode = "split"     
+        mode = "split"
 
-  path = os.path.join(path, mode) # path/folderName/train
+  path = os.path.join(path, mode)
 
   IMG_DIR = os.path.join(path, "IMG")
   GT_DIR  = os.path.join(path, "GT")
-  
+
   m = "null"
-  
+
   if mode =="split":
       if args.testmode == 1:
         m = "0_2"
       elif args.testmode == 2:
-        m = "2_4"  
+        m = "2_4"
       elif args.testmode == 3:
-        m = "4_8"  
+        m = "4_8"
       elif args.testmode == 4:
-        m = "8_16"  
+        m = "8_16"
       elif args.testmode == 5:
-        m = "16_32"  
+        m = "16_32"
       elif args.testmode == 6:
-        m = "thick"  
+        m = "thick"
       elif args.testmode == 7:
-        m = "zero"  
+        m = "zero"
 
       IMG_DIR = os.path.join(IMG_DIR, m)
       GT_DIR  = os.path.join(GT_DIR , m)
 
   return IMG_DIR, GT_DIR
- 
-def CrackTree260(args, mode, path): # Test Only
+
+def CrackTree260(args, mode, path):
   folderName = "CrackTree260"
   path = os.path.join(path, folderName)
 
@@ -51,45 +51,45 @@ def CrackTree260(args, mode, path): # Test Only
 
 def OmniCrack30K(args, mode, path):
   folderName = "OmniCrack30K"
-  path = os.path.join(path, folderName) # path/omnicrack/
+  path = os.path.join(path, folderName)
 
   if mode == "test":
       if args.testmode == 0:
         mode = "val"
-        IMG_DIR = os.path.join(path, "IMG", mode) # path/omnicrack/IMG/val
-        GT_DIR  = os.path.join(path, "GT" , mode)  
-        print(GT_DIR)      
+        IMG_DIR = os.path.join(path, "IMG", mode)
+        GT_DIR  = os.path.join(path, "GT" , mode)
+        print(GT_DIR)
         return IMG_DIR, GT_DIR
       else:
-        mode = "split"     
-        
+        mode = "split"
+
   m = "null"
   if mode =="split":
       if args.testmode == 1:
         m = "0_2"
       elif args.testmode == 2:
-        m = "2_4"  
+        m = "2_4"
       elif args.testmode == 3:
-        m = "4_8"  
+        m = "4_8"
       elif args.testmode == 4:
-        m = "8_16"  
+        m = "8_16"
       elif args.testmode == 5:
-        m = "16_32"  
+        m = "16_32"
       elif args.testmode == 6:
-        m = "32+"  
+        m = "32+"
       elif args.testmode == 7:
-        m = "0"  
+        m = "0"
 
-  IMG_DIR = os.path.join(path, "IMG", mode) # path/omnicrack/IMG/mode
+  IMG_DIR = os.path.join(path, "IMG", mode)
   GT_DIR  = os.path.join(path, "GT" , mode)
 
   if m != "null":
     IMG_DIR = os.path.join(IMG_DIR, m)
     GT_DIR  = os.path.join(GT_DIR , m)
-  
+
   return IMG_DIR, GT_DIR
 
-def ADE20K(args, mode, path): # Train Only
+def ADE20K(args, mode, path):
   if mode == "train":
     folderName = f"ade20k/{mode}"
   else:
@@ -100,8 +100,8 @@ def ADE20K(args, mode, path): # Train Only
   GT_DIR  = os.path.join(path, "GT")
 
   return IMG_DIR, GT_DIR
-  
-### MAIN ###
+
+
 def getDataPath(args):
   path = args.data_path
 
@@ -110,4 +110,3 @@ def getDataPath(args):
   Val_IMG_DIR  , Val_MASK_DIR   = globals()[args.val_set](args, "val", path)
 
   return Train_IMG_DIR, Train_MASK_DIR, Test_IMG_DIR , Test_MASK_DIR, Val_IMG_DIR  , Val_MASK_DIR
-

@@ -10,22 +10,3 @@ class MyPrintingCallBack(Callback):
 
     def on_train_end(self, trainer, pl_module):
         print("Training is done")
-
-# fName = "test"
-
-# checkpoint_callback = ModelCheckpoint(
-#     dirpath=os.path.join(os.getcwd(), 'checkpoints', f'{fName}'),
-#     filename='{fName}-epoch{epoch:02d}-val_loss{val_loss:.4f}',
-#     verbose=True,
-#     save_last=True,
-#     save_top_k=5,
-#     monitor='val_loss',
-#     mode='min'
-# )
-
-# early_stopping = EarlyStopping(
-#     monitor='val_loss',
-#     patience=10,
-#     verbose=True,
-#     mode='min'
-# )

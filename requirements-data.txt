@@ -1,0 +1,9 @@
+imageio==2.38.0
+lazy-loader==0.6
+networkx==3.7
+numpy==2.2.6
+packaging==26.3
+pillow==11.3.0
+scikit-image==0.25.2
+scipy==1.15.3
+tifffile==2026.9.20

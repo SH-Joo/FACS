@@ -61,10 +61,10 @@ def run_evaluation(gt_folder, pred_folder, tolerances):
         print("No matching files.")
         return
 
-    # Prepare containers for cl-IoU and raw IoU
+
     all_trues = {tol: [] for tol in tolerances}
     all_preds = {tol: [] for tol in tolerances}
-    iou_list = []  # for storing raw IoU per image
+    iou_list = []
 
     total = len(matched_pairs)
     for idx, (gt_path, pred_path) in enumerate(matched_pairs, 1):
@@ -73,19 +73,19 @@ def run_evaluation(gt_folder, pred_folder, tolerances):
         true_img = cv2.imread(str(gt_path), cv2.IMREAD_GRAYSCALE)
         pred_img = cv2.imread(str(pred_path), cv2.IMREAD_GRAYSCALE)
 
-        # adaptive binarization
+
         true_bin = binarize(true_img)
         pred_bin = binarize(pred_img)
 
-        # Raw IoU 계산 및 저장
+
         raw_iou = compute_iou_manual(true_bin.flatten(), pred_bin.flatten())
         iou_list.append(raw_iou)
 
-        # thinning to skeletons
+
         true_skel = thin(true_bin.astype(bool)).astype(np.uint8)
         pred_skel = thin(pred_bin.astype(bool)).astype(np.uint8)
 
-        # resize if shapes mismatch
+
         if pred_skel.shape != true_skel.shape:
             pred_skel = cv2.resize(
                 pred_skel,
@@ -93,7 +93,7 @@ def run_evaluation(gt_folder, pred_folder, tolerances):
                 interpolation=cv2.INTER_NEAREST
             )
 
-        # cl‑IoU 저장
+
         for tol in tolerances:
             t_tol, p_tol = apply_tolerance(true_skel, pred_skel, tol)
             ft = t_tol.flatten()
@@ -102,7 +102,7 @@ def run_evaluation(gt_folder, pred_folder, tolerances):
             all_trues[tol].append(ft[keep])
             all_preds[tol].append(fp[keep])
 
-    # cl‑IoU 출력
+
     print("\n=== cl-IoU Results ===")
     for tol in tolerances:
         tr = np.concatenate(all_trues[tol])
@@ -110,16 +110,16 @@ def run_evaluation(gt_folder, pred_folder, tolerances):
         score = compute_iou_manual(tr, pr)
         print(f"Tolerance {tol:2d}: IoU = {score:.4f}")
 
-    # 평균 raw IoU 출력
+
     mean_raw_iou = np.mean(iou_list) if iou_list else float('nan')
     print(f"\n=== Raw IoU ===\nMean IoU over all images: {mean_raw_iou:.4f}")
 
 if __name__ == "__main__":
-    # gt_path = "/home/sil-juicy/Crack/Datasets/datas/split_dataset_final/test/GT"
+
     gt_path = "/home/sil-juicy/Crack/Datasets/datas/split_dataset_final/split/GT/0_2"
     pred_path = "/home/sil-juicy/Downloads/v1"
-    # pred_path = "/home/sil-juicy/codes/Segmentation/outputs/U-Net/predictions/v1"
-    
+
+
     tolerance_list = [0, 1, 2, 4, 8, 16, 32, 64]
 
     run_evaluation(gt_path, pred_path, tolerance_list)

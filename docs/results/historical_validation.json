@@ -1,0 +1,335 @@
+{
+  "metric_protocol": "facs-legacy-compatible-metrics-v1",
+  "options": {
+    "threshold": 0.5,
+    "deltas": [
+      0,
+      2,
+      4,
+      8
+    ],
+    "cts_radius": 10,
+    "cts_threshold": 0.5,
+    "cts_mode": "legacy_exact",
+    "empty_iou": 1,
+    "empty_cliou": 1,
+    "cliou_skeleton": "thin",
+    "cliou_empty_policy": "include",
+    "empty_cts": 0
+  },
+  "split": "val",
+  "inference_precision": "fp32",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "cpu_threads": 4,
+    "source_hashes": {
+      "facs/__init__.py": "de5c902e44b45f92b9849620a2577ba6b8e64999fab1d2dfb3171e7f31322b50",
+      "facs/__main__.py": "9b9b1c32fefe4ce8aae3fae55497cce80e1ca26b6307729b129e301fbf61086f",
+      "facs/checkpoints.py": "761d71d7aad7de3f9f4013b308ed27aa696d12042d51a003e83f152216d267a5",
+      "facs/data.py": "de9019025cfc7f5750111b8623ee97276e0aaa65a61f2d1f5906d6c53eaefa39",
+      "facs/diagnostics.py": "727425dc4993efd16a28fb623da27cc850bcc5589c8f0dca539b42abc9a9906a",
+      "facs/engine.py": "0d6147798308c6012abfce5d031035305984b121c9c74ba319696aeaffccbe9c",
+      "facs/losses.py": "b619bac80c21280b0609f7e6bf155479e711999c9d551848af22a0a68ae3099d",
+      "facs/metrics.py": "ee33450173c24823adb02a3627ef07a6b5c24a64d1257686a747367304c5004d",
+      "facs/model.py": "ae1168e1759dc8cde930c40baeb4e441598b1f6ee0a6c6f0182285b099bee36c"
+    },
+    "lock_sha256": "ccd17ebc73c2149bf2e198ce6c0f6ec7ce725ca5a90683466975ab3ea6b135b5"
+  },
+  "subset": null,
+  "checkpoint_sha256": "88f82ff9ce7f893f49016e459c01512eca81fd4585b8f97afdb0223b21a7fdc7",
+  "manifest_sha256": "e8b3e0432e3d0e9578da9dfe69944fdfebc4e391f7c856aaec99eee845bd0d22",
+  "groups": {
+    "all": {
+      "count": 1200,
+      "macro": {
+        "iou": 0.6696220439634912,
+        "pcs": 0.6556689452015566,
+        "rcs": 0.6412464690525638,
+        "cts": 0.6393379200889662,
+        "cliou_0": 0.2856510317113968,
+        "cliou_2": 0.5317419846676052,
+        "cliou_4": 0.6590630974528882,
+        "cliou_8": 0.790215453010647
+      },
+      "macro_counts": {
+        "iou": 1200,
+        "pcs": 1200,
+        "rcs": 1200,
+        "cts": 1200,
+        "cliou_0": 1200,
+        "cliou_2": 1200,
+        "cliou_4": 1200,
+        "cliou_8": 1200
+      },
+      "micro": {
+        "iou": 0.6434190034411583,
+        "cliou_0": 0.13302216593740757,
+        "cliou_2": 0.404723088887015,
+        "cliou_4": 0.5624948117710539,
+        "cliou_8": 0.7343477404267591
+      },
+      "empty_gt_count": 227,
+      "false_positive_on_empty_gt_count": 7
+    },
+    "0_2": {
+      "count": 55,
+      "macro": {
+        "iou": 0.519684684202277,
+        "pcs": 0.9687135967825519,
+        "rcs": 0.9588556447997967,
+        "cts": 0.9549916830181236,
+        "cliou_0": 0.4712402529041122,
+        "cliou_2": 0.849014086264435,
+        "cliou_4": 0.8912938247064102,
+        "cliou_8": 0.9194733792885497
+      },
+      "macro_counts": {
+        "iou": 55,
+        "pcs": 55,
+        "rcs": 55,
+        "cts": 55,
+        "cliou_0": 55,
+        "cliou_2": 55,
+        "cliou_4": 55,
+        "cliou_8": 55
+      },
+      "micro": {
+        "iou": 0.5180376518594083,
+        "cliou_0": 0.4690552449917441,
+        "cliou_2": 0.8484136019403059,
+        "cliou_4": 0.8929083545068048,
+        "cliou_8": 0.923324709582509
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "nonzero": {
+      "count": 973,
+      "macro": {
+        "iou": 0.5997394170156111,
+        "pcs": 0.808635903640152,
+        "rcs": 0.790848677146019,
+        "cts": 0.7884948654745729,
+        "cliou_0": 0.1261883227684236,
+        "cliou_2": 0.429692067421507,
+        "cliou_4": 0.5867170780508385,
+        "cliou_8": 0.7484671568476633
+      },
+      "macro_counts": {
+        "iou": 973,
+        "pcs": 973,
+        "rcs": 973,
+        "cts": 973,
+        "cliou_0": 973,
+        "cliou_2": 973,
+        "cliou_4": 973,
+        "cliou_8": 973
+      },
+      "micro": {
+        "iou": 0.6444898982547617,
+        "cliou_0": 0.133243954591548,
+        "cliou_2": 0.4055571464114204,
+        "cliou_4": 0.5637788929045007,
+        "cliou_8": 0.7361933686949502
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "8_16": {
+      "count": 234,
+      "macro": {
+        "iou": 0.5717138452695681,
+        "pcs": 0.8547574453723564,
+        "rcs": 0.8402207222836983,
+        "cts": 0.8278788885814301,
+        "cliou_0": 0.10691473214298172,
+        "cliou_2": 0.42972339131123877,
+        "cliou_4": 0.6114505635416582,
+        "cliou_8": 0.7686477475967349
+      },
+      "macro_counts": {
+        "iou": 234,
+        "pcs": 234,
+        "rcs": 234,
+        "cts": 234,
+        "cliou_0": 234,
+        "cliou_2": 234,
+        "cliou_4": 234,
+        "cliou_8": 234
+      },
+      "micro": {
+        "iou": 0.5708616207422686,
+        "cliou_0": 0.09737281067556297,
+        "cliou_2": 0.3918670959093756,
+        "cliou_4": 0.5818023725234458,
+        "cliou_8": 0.7635652554425117
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "16_32": {
+      "count": 332,
+      "macro": {
+        "iou": 0.6617162694985859,
+        "pcs": 0.8002419366059301,
+        "rcs": 0.7860787174028676,
+        "cts": 0.7846919391020473,
+        "cliou_0": 0.0705895942281894,
+        "cliou_2": 0.3096992180177156,
+        "cliou_4": 0.5057816572859065,
+        "cliou_8": 0.7307999393057196
+      },
+      "macro_counts": {
+        "iou": 332,
+        "pcs": 332,
+        "rcs": 332,
+        "cts": 332,
+        "cliou_0": 332,
+        "cliou_2": 332,
+        "cliou_4": 332,
+        "cliou_8": 332
+      },
+      "micro": {
+        "iou": 0.6597667130095549,
+        "cliou_0": 0.06294949363166392,
+        "cliou_2": 0.27803741367831547,
+        "cliou_4": 0.46426494923744355,
+        "cliou_8": 0.6939643393906272
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "4_8": {
+      "count": 143,
+      "macro": {
+        "iou": 0.5205464306706947,
+        "pcs": 0.8961128970448002,
+        "rcs": 0.8712768882400237,
+        "cts": 0.8716740731333625,
+        "cliou_0": 0.1784509735454505,
+        "cliou_2": 0.6146569941110565,
+        "cliou_4": 0.7338598460857471,
+        "cliou_8": 0.8145894038380362
+      },
+      "macro_counts": {
+        "iou": 143,
+        "pcs": 143,
+        "rcs": 143,
+        "cts": 143,
+        "cliou_0": 143,
+        "cliou_2": 143,
+        "cliou_4": 143,
+        "cliou_8": 143
+      },
+      "micro": {
+        "iou": 0.5168823359419926,
+        "cliou_0": 0.18469503415739974,
+        "cliou_2": 0.608233539137281,
+        "cliou_4": 0.7349542181527247,
+        "cliou_8": 0.8210069083431529
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "2_4": {
+      "count": 82,
+      "macro": {
+        "iou": 0.4830532420983978,
+        "pcs": 0.9332057815917715,
+        "rcs": 0.8788244829353749,
+        "cts": 0.8931481158525976,
+        "cliou_0": 0.23078442647659717,
+        "cliou_2": 0.7146952958647144,
+        "cliou_4": 0.7825558708181544,
+        "cliou_8": 0.8293855876326964
+      },
+      "macro_counts": {
+        "iou": 82,
+        "pcs": 82,
+        "rcs": 82,
+        "cts": 82,
+        "cliou_0": 82,
+        "cliou_2": 82,
+        "cliou_4": 82,
+        "cliou_8": 82
+      },
+      "micro": {
+        "iou": 0.4845365950676213,
+        "cliou_0": 0.23782669184139918,
+        "cliou_2": 0.7144272826681246,
+        "cliou_4": 0.7845740923859302,
+        "cliou_8": 0.8322128348013662
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    },
+    "zero": {
+      "count": 227,
+      "macro": {
+        "iou": 0.9691629955947136,
+        "pcs": 0.0,
+        "rcs": 0.0,
+        "cts": 0.0,
+        "cliou_0": 0.9691629955947136,
+        "cliou_2": 0.9691629955947136,
+        "cliou_4": 0.9691629955947136,
+        "cliou_8": 0.9691629955947136
+      },
+      "macro_counts": {
+        "iou": 227,
+        "pcs": 227,
+        "rcs": 227,
+        "cts": 227,
+        "cliou_0": 227,
+        "cliou_2": 227,
+        "cliou_4": 227,
+        "cliou_8": 227
+      },
+      "micro": {
+        "iou": 0.0,
+        "cliou_0": 0.0,
+        "cliou_2": 0.0,
+        "cliou_4": 0.0,
+        "cliou_8": 0.0
+      },
+      "empty_gt_count": 227,
+      "false_positive_on_empty_gt_count": 7
+    },
+    "thick": {
+      "count": 127,
+      "macro": {
+        "iou": 0.6885389639407623,
+        "pcs": 0.4973456919731942,
+        "rcs": 0.4922261148655594,
+        "cts": 0.49253574703027186,
+        "cliou_0": 0.03123164843033851,
+        "cliou_2": 0.16943486999278157,
+        "cliou_4": 0.3286935047212113,
+        "cliou_8": 0.5567122207090625
+      },
+      "macro_counts": {
+        "iou": 127,
+        "pcs": 127,
+        "rcs": 127,
+        "cts": 127,
+        "cliou_0": 127,
+        "cliou_2": 127,
+        "cliou_4": 127,
+        "cliou_8": 127
+      },
+      "micro": {
+        "iou": 0.7005667868848414,
+        "cliou_0": 0.030237550883845426,
+        "cliou_2": 0.1561878824873613,
+        "cliou_4": 0.2976726198846857,
+        "cliou_8": 0.5144168433184466
+      },
+      "empty_gt_count": 0,
+      "false_positive_on_empty_gt_count": 0
+    }
+  }
+}

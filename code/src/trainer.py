@@ -42,21 +42,20 @@ def train(args, model):
         VAL_IMG_DIR, VAL_MASK_DIR,
         TEST_IMG_DIR, TEST_MASK_DIR,
         args.BATCH_SIZE, args.NUM_WORKERS, config.PIN_MEMORY,
-   )   
+   )
 
-    # print(summary(model, input_size=(3, 256, 256)))
-    
+
     trainer = pl.Trainer(
         logger=logger,
         accelerator="auto",
-        min_epochs=1, 
+        min_epochs=1,
         max_epochs=args.NUM_EPOCHS,
-        precision='16-mixed',  # Consider switching to full precision if numerical issues persist
-        gradient_clip_val=1.0,  # Added gradient clipping for stable training
-        callbacks=[checkpoint_callback, early_stopping]  
+        precision='16-mixed',
+        gradient_clip_val=1.0,
+        callbacks=[checkpoint_callback, early_stopping]
     )
 
-    
+
     trainer.fit(model, train_loader, val_loader)
     trainer.validate(model, val_loader)
     trainer.test(model, test_loader, ckpt_path="best")

@@ -1,54 +1,88 @@
-# Frequency-aware crack segmentation network (FACS-net) and crack topology loss (CT-loss) for thin cracks
+# FACS-Net
 
-## Introduction
+Official implementation of **Frequency-aware crack segmentation network (FACS-net) and crack topology loss (CT-loss) for thin cracks**, Siheon Joo, Seokhwan Kim, and Hongjo Kim, *Automation in Construction* 182 (2026), 106719. [Paper](https://doi.org/10.1016/j.autcon.2025.106719).
 
-**FACS-Net** is a deep learning framework targeting the **segmentation of thin structural cracks** in images, a crucial task for infrastructure safety monitoring. Traditional crack segmentation models often suffer from **spectral bias**, meaning they favor low-frequency (coarse) features and struggle with high-frequency details like very thin cracks. This leads to fragmented or missed detections of fine cracks, compromising the analysis of crack continuity and topology. FACS-Net directly addresses this issue with a two-fold strategy: a **frequency-aware architecture** and a **topology-preserving loss function**. The result is a model that more reliably detects **thin cracks (width ≤ 2px)** and maintains their connectivity in segmentation outputs.
+## Reimplementation v2
 
-### Highlights
+This release provides config-based training and evaluation with the original FACS-Net architecture and **BCE + soft-CTS + SEMEDA** loss composition. All three loss coefficients remain positive. Model, data, metric, and checkpoint handling are explicit. See [implementation changes and protocol](docs/REIMPLEMENTATION.md).
 
-* **Frequency-Aware Design:** A novel segmentation network that counteracts spectral bias by explicitly learning high-frequency crack features.
-* **Topology Preservation:** A custom **Crack Topology Loss (CT-Loss)** that enforces crack connectivity and continuous thin structures in the predicted masks.
-* **State-of-the-Art Performance:** On the **CrackVision12K** benchmark, FACS-Net significantly outperforms prior models on thin cracks (IoU improved by 0.306 and CTS by 0.360) and sets new overall best scores (IoU 0.663, CTS 0.651).
-* **Exceptional Thin Crack Detection:** On the thinnest cracks (≤ 2px), FACS-Net outperforms previous state-of-the-art methods by a large margin, achieving +0.306 IoU and +0.360 CTS gains over the best existing model. This highlights the effectiveness of FACS-Net's frequency-aware design in the most challenging cases.
-
-## Paper Link
-
-**Paper (Automation in Construction)**: [https://doi.org/10.1016/j.autcon.2025.106719](https://doi.org/10.1016/j.autcon.2025.106719)
-
-## Model Description
-
-FACS-Net consists of a **hybrid encoder** and a **frequency-aware decoder**:
-
-* **Encoder:** Combines CNN (ResNet50) and Transformer (MixVision Transformer from SegFormer) for local and global feature extraction.
-* **Decoder:** Uses CBAM (attention) and FPCM (Fourier-based frequency modulation) to recover high-frequency details lost due to downsampling.
-
-**CT-Loss** supervises:
-
-* Pixel-wise accuracy via **BCE loss**
-* Edge alignment via **SEMEDA edge-aware loss**
-* Crack continuity via differentiable **soft-CTS loss**
+For benchmarking the published model, use the [original CV12 weights](https://doi.org/10.6084/m9.figshare.29849432) and the evaluation commands below. Newly trained v2 segmentation weights are available upon request at [sh.joo@yonsei.ac.kr](mailto:sh.joo@yonsei.ac.kr).
 
 ## Installation
 
+Tested on Linux with Python 3.12, PyTorch 2.8.0, CUDA 12.8, and an RTX 5090.
+
 ```bash
-git clone https://github.com/yourusername/FACS.git
+git clone https://github.com/SH-Joo/FACS.git
+cd FACS
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements-train.lock
+.venv/bin/python -m facs --help
 ```
 
-## Datasets & Training
+For CPU inference, install `requirements-data.txt`, then CPU builds of PyTorch 2.8.0 and torchvision 0.23.0, and pass `--device cpu`.
 
-* **CrackVision12K**: Main training dataset (9600 train / 1200 test split).
-* **OmniCrack30K**: Used for cross-domain evaluation.
-* Images resized to 256x256; training with Adam optimizer, LR=5e-5, batch=12, early stopping within 100 epochs.
+## CrackVision12K preparation
 
-## Evaluation Metrics
+Place `CrackVision12K.zip` in the repository root, or supply its path:
 
-* **IoU**: Pixel-level accuracy
-* **CL-IoU**: Alignment of predicted vs. true crack centerlines
-* **CTS**: Measures crack continuity & segment-level matching
+```bash
+.venv/bin/python scripts/prepare_cv12.py --archive CrackVision12K.zip
+```
 
-## Results Summary
+Preparation retains the original PNG files and **9,600 train / 1,200 validation / 1,200 test** split. Width subsets are reconstructed from foreground area divided by skeleton pixel count. Images and masks retain their supplied 256×256 resolution. The archive is expected to contain `split_dataset_final/{train,val,test}/{IMG,GT}`. Obtain datasets from their authors.
 
-### Overall Performance on CrackVision12K
+## Evaluation with published weights
+
+Download `CV12.ckpt` from [Figshare](https://doi.org/10.6084/m9.figshare.29849432) and place it under `code/ckpts/`. Convert it once, then evaluate:
+
+```bash
+.venv/bin/python -m facs migrate-legacy \
+  --checkpoint code/ckpts/CV12.ckpt \
+  --config configs/cv12_legacy_inference.json \
+  --output runs/cv12_published/checkpoint.pt
+.venv/bin/python -m facs evaluate \
+  --checkpoint runs/cv12_published/checkpoint.pt \
+  --output-dir runs/cv12_published_test --split test
+```
+
+Conversion preserves all 513 checkpoint state entries and requires no training. Historical weights should be used without BN recalibration. To reproduce the validation table below, use `--split val` and a new output directory. Evaluation writes predictions, per-image CSV, and overall, positive-only, negative, and width-bin summaries. The original metric profile is preserved: threshold 0.5, image-macro IoU, CL-IoU with δ=0,2,4,8, and `legacy_exact` CTS. See [metric definitions](docs/REIMPLEMENTATION.md#data-and-evaluation).
+
+## Training v2
+
+Pretrain the SEMEDA edge network on CV12 training masks, then train the segmentation model:
+
+```bash
+.venv/bin/python -m facs pretrain-edge \
+  --config configs/cv12_ct_v2.json --run-dir runs/cv12_edge_v1 --epochs 5
+.venv/bin/python -m facs train \
+  --config configs/cv12_ct_v2.json --run-dir runs/cv12_ct_v2 --stop-after-epoch 30
+.venv/bin/python scripts/recalibrate_batchnorm.py \
+  --checkpoint runs/cv12_ct_v2/last.pt --output-dir runs/cv12_ct_v2_bn \
+  --sample-count 9600 --seed 8106 --batch-size 12 --workers 4 --device cuda \
+  --cpu-threads 4
+.venv/bin/python -m facs evaluate \
+  --checkpoint runs/cv12_ct_v2_bn/checkpoint.pt \
+  --output-dir runs/cv12_ct_v2_val --split val
+```
+
+The recipe uses **0.5 BCE + 0.25 soft-CTS + 0.25 SEMEDA**, SEMEDA feature weights `(0,1,0)`, batch size 12, Adam base LR 1e-4, and segmentation-head LR multiplier 10. Segmentation is initialized independently of the published checkpoint, with an ImageNet V2 ResNet50 encoder. The reported export uses epoch-30 `last.pt` with BN statistics recalculated using **training images only**; learned parameters and the evaluator are unchanged.
+
+Run directories must be new. `last.pt` stores optimizer, scheduler, and RNG states for epoch-boundary resume:
+
+```bash
+.venv/bin/python -m facs train \
+  --config configs/cv12_ct_v2.json --run-dir runs/cv12_ct_v2 \
+  --resume runs/cv12_ct_v2/last.pt --stop-after-epoch 30
+```
+
+`best.pt` uses raw validation IoU and is separate from the reported BN-recalibrated epoch-30 export. The v2 settings are documented separately from historical training conditions. Training does not automatically evaluate the test split.
+
+## Published results
+
+The following tables retain the historical results reported for CrackVision12K. They are not new v2 measurements.
+
+### Overall performance on CrackVision12K
 
 | Model            | IoU   | CTS   |
 | ---------------- | ----- | ----- |
@@ -57,7 +91,7 @@ git clone https://github.com/yourusername/FACS.git
 | DECS-Net         | 0.564 | 0.626 |
 | FCN              | 0.610 | 0.614 |
 
-### Performance on Extremely Thin Cracks (≤ 2px in CrackVision12K)
+### Extremely thin cracks (≤2px)
 
 | Model            | IoU       | CTS       |
 | ---------------- | --------- | --------- |
@@ -66,30 +100,41 @@ git clone https://github.com/yourusername/FACS.git
 | DECS-Net         | 0.275     | 0.896     |
 | FCN              | 0.136     | 0.717     |
 
-FACS-Net shows **exceptional performance** on the most challenging thin-crack range (τ ≤ 2 px):
+## Reimplementation results
 
-* **+0.306 IoU** and **+0.360 CTS** over Hybrid-Segmentor
-* Maintains topological continuity better than all prior models (CTS = 0.945)
+These measurements use the same original **validation split of 1,200 images** and unchanged evaluator. They are separate from the paper's test tables above. The new model is a **single-seed, 30-epoch CT-Loss training run** followed by full-train BN recalibration. Independent-seed and final-test results are not included in this release.
 
-These results confirm FACS-Net's superiority in segmenting very fine cracks, which are critical for structural safety analysis and where previous SOTA methods perform poorly.
+| Model | Overall IoU | Overall CTS | ≤2px IoU | ≤2px CTS |
+| --- | ---: | ---: | ---: | ---: |
+| Published CV12 checkpoint | 0.6696 | 0.6393 | 0.5197 | 0.9550 |
+| FACS-Net v2, newly trained | 0.6608 | 0.6890 | 0.4308 | 0.9495 |
 
-## Visualization
+The new run has higher overall CTS, indicating greater agreement under the connectivity metric. For cracks ≤2px, binary-mask IoU is sensitive to pixel quantization and small boundary shifts; IoU and CTS should be considered together.
 
-* Thin crack examples show FACS-Net capturing continuous paths vs. fragmented outputs from prior models.
-* Figures from the paper (6 & 7) demonstrate robustness under variable crack widths.
+[Historical scores](docs/results/historical_validation.json) · [V2 CT scores](docs/results/v2_ct_validation.json) · [Protocol and verification](docs/REIMPLEMENTATION.md).
 
-## Pretrained Models & Results
+## Verification
 
-* 🔗 Model Weights & Outputs: [figshare](https://doi.org/10.6084/m9.figshare.29849432)
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
 
-## License & Disclaimer
+Checks cover losses, metrics against historical evaluators, paired transforms, dataset validation, and exact epoch-boundary resume. [Release verification](docs/results/release_verification.json) records compatibility checks with the historical weights.
 
-This code is released for **research and academic use only**.
-The paper is under review at *Automation in Construction*, and the version shared here is a **preprint** in compliance with Elsevier's sharing policy.
-Do not redistribute the publisher version. Cite appropriately.
+## Citation
 
----
+```bibtex
+@article{Joo2026FACSNet,
+  title = {Frequency-aware crack segmentation network (FACS-net) and crack topology loss (CT-loss) for thin cracks},
+  author = {Joo, Siheon and Kim, Seokhwan and Kim, Hongjo},
+  journal = {Automation in Construction},
+  volume = {182},
+  pages = {106719},
+  year = {2026},
+  doi = {10.1016/j.autcon.2025.106719}
+}
+```
 
-\u26a0\ufe0f CrackVision12K and OmniCrack30K datasets are owned by their creators. Use them under their respective licenses.
+## Terms and contact
 
-For questions, please contact the corresponding author.
+This code is released for research and academic use only, consistent with the repository's existing terms. Use datasets under their creators' licenses. Please cite the paper when using this implementation. Questions and v2 weight requests: [sh.joo@yonsei.ac.kr](mailto:sh.joo@yonsei.ac.kr).

@@ -11,34 +11,34 @@ def eval_metrics(args, loader, model, device="cuda", multiple_outputs=False):
     eps = 1e-7
     threshold = 0.5
 
-    # 전역 집계 지표
+
     TP_tot = FP_tot = TN_tot = FN_tot = 0
 
-    # 이미지별 IoU/Dice 저장
+
     iou_list, dice_list = [], []
 
     with torch.no_grad():
         for x, y, _ in loader:
             x = x.to(device)
-            y = y.to(device).unsqueeze(1)      # (B,1,H,W)
-            y_bin = (y > threshold).float()    # GT 이진화
+            y = y.to(device).unsqueeze(1)
+            y_bin = (y > threshold).float()
 
             out = model(x)
             if multiple_outputs:
                 out = out[result_save_ind]
-            prob = torch.sigmoid(out)          # (B,1,H,W)
-            pred_bin = (prob > threshold).float()               
+            prob = torch.sigmoid(out)
+            pred_bin = (prob > threshold).float()
 
             B = y_bin.shape[0]
-            # 배치 내 각 이미지별로
+
             for b in range(B):
-                yt = y_bin[b,0]    # (H,W)
+                yt = y_bin[b,0]
                 pt = pred_bin[b,0]
-                
+
                 if yt.shape != pt.shape:
                     print(f"yt: {yt.shape} / pt: {pt.shape}")
 
-                # 픽셀 단위 TP/FP/TN/FN
+
                 TP = int(((pt == 1) & (yt == 1)).sum().item())
                 FP = int(((pt == 1) & (yt == 0)).sum().item())
                 TN = int(((pt == 0) & (yt == 0)).sum().item())
@@ -47,12 +47,12 @@ def eval_metrics(args, loader, model, device="cuda", multiple_outputs=False):
                 TP_tot += TP;  FP_tot += FP
                 TN_tot += TN;  FN_tot += FN
 
-                # 이미지별 IoU/Dice
+
                 gt_sum = int(yt.sum().item())
                 pred_sum = int(pt.sum().item())
 
                 if gt_sum == 0:
-                    # GT에 크랙이 없을 때
+
                     if pred_sum == 0:
                         img_iou  = 1.0
                         img_dice = 1.0
@@ -66,12 +66,12 @@ def eval_metrics(args, loader, model, device="cuda", multiple_outputs=False):
                 iou_list .append(img_iou)
                 dice_list.append(img_dice)
 
-    # 전역 지표
+
     accuracy  = (TP_tot + TN_tot) / (TP_tot + FP_tot + TN_tot + FN_tot + eps)
     precision = TP_tot / (TP_tot + FP_tot + eps)
     recall    = TP_tot / (TP_tot + FN_tot + eps)
 
-    # 이미지별 평균 IoU/Dice
+
     mean_iou  = float(np.mean(iou_list))
     mean_dice = float(np.mean(dice_list))
 
@@ -113,7 +113,7 @@ def eval_OIS(loader, model, device="cuda", multiple_outputs=False):
                 FN = torch.sum(confusion_matirx == 0).item()
 
                 precision = (TP) / (TP+FP+eps)
-                recall = (TP) / (TP+FN+eps) # TP rate
+                recall = (TP) / (TP+FN+eps)
                 f1_score = 2* (precision*recall)/(precision+recall+eps)
 
                 if f1_score > best_OIS:
@@ -170,7 +170,7 @@ def eval_ODS(loader, model, device="cuda", multiple_outputs=False):
                 FN_total += FN
 
             precision = (TP_total) / (TP_total+FP_total+eps)
-            recall = (TP_total) / (TP_total+FN_total+eps) # TP rate
+            recall = (TP_total) / (TP_total+FN_total+eps)
             f1_score = 2* (precision*recall)/(precision+recall+eps)
             if f1_score > best_ODS:
                 best_ODS = f1_score
@@ -267,9 +267,9 @@ def loss_plot(train_loss, val_loss):
         labels = [i for i in range(1, len(train_loss)+1)]
         plt.plot(train_loss)
         plt.plot(val_loss)
-        # plt.xticks(range(0, len(train_loss), 10), labels[::9])
-        ticks = [i for i in range(0, len(train_loss), 10)]  # Ticks at every 10th index
-        tick_labels = [labels[i-1] for i in ticks]  # Corresponding labels for the ticks
+
+        ticks = [i for i in range(0, len(train_loss), 10)]
+        tick_labels = [labels[i-1] for i in ticks]
         plt.xticks(ticks, tick_labels)
         plt.gca().get_xticklabels()[0].set_visible(False)
         plt.xlabel('Epoch', fontsize=17)

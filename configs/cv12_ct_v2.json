@@ -1,0 +1,96 @@
+{
+  "protocol": {
+    "id": "facs-v2-cv12-ct-20261007",
+    "status": "locked",
+    "purpose": "Released CT-Loss training recipe; 30-epoch seed-0 validation evaluation",
+    "choices": [
+      "Original architecture, normalized FPCM and fixed-affine LayerNorm",
+      "BCE + literal soft-CTS + SEMEDA with positive coefficients",
+      "SEMEDA second hidden feature, mean absolute feature difference",
+      "ResNet50 ImageNet V2 initialization; no segmentation checkpoint initialization",
+      "Train-only dihedral augmentation",
+      "Adam base LR 1e-4; segmentation head LR multiplier 10",
+      "Raw validation macro IoU scheduler and checkpoint monitor",
+      "Reported export uses epoch-30 last with full-train BatchNorm recalibration",
+      "Five-epoch SEMEDA pretraining on all 9600 training masks only",
+      "Training ceiling 120 epochs; use --stop-after-epoch 30 for reported budget",
+      "Single seed validation measurement; paper test tables are historical"
+    ]
+  },
+  "model": {
+    "cnn_weights": "IMAGENET1K_V2",
+    "norm_affine": false,
+    "cbam": true,
+    "fpcm": true,
+    "filter_mode": "normalized",
+    "cutoff_ratio": 0.25
+  },
+  "loss": {
+    "weights": {
+      "bce": 0.5,
+      "soft_cts": 0.25,
+      "semeda": 0.25
+    },
+    "soft_parameters": {
+      "iterations": 25,
+      "sigma": 2,
+      "kernel_size": 13,
+      "eps": 1e-06
+    },
+    "edge_checkpoint": "runs/cv12_edge_v1/edge.pt",
+    "semeda_layer_weights": [
+      0,
+      1,
+      0
+    ],
+    "semeda_reduction": "mean"
+  },
+  "data": {
+    "root": "data/CrackVision12K",
+    "mean": [
+      0.51789941,
+      0.51360926,
+      0.547762
+    ],
+    "std": [
+      0.1812099,
+      0.17746663,
+      0.20386334
+    ],
+    "augmentation": "dihedral",
+    "verify_hashes": true
+  },
+  "training": {
+    "seed": 0,
+    "batch_size": 12,
+    "workers": 4,
+    "max_epochs": 120,
+    "lr": 0.0001,
+    "patience": 15,
+    "scheduler_patience": 5,
+    "scheduler_factor": 0.5,
+    "gradient_clip_norm": 1,
+    "precision": "fp32",
+    "deterministic": true,
+    "cpu_threads": 4,
+    "monitor": "val_iou_macro",
+    "head_lr_multiplier": 10
+  },
+  "evaluation": {
+    "threshold": 0.5,
+    "deltas": [
+      0,
+      2,
+      4,
+      8
+    ],
+    "cts_radius": 10,
+    "cts_threshold": 0.5,
+    "cts_mode": "legacy_exact",
+    "empty_iou": 1,
+    "empty_cliou": 1,
+    "cliou_skeleton": "thin",
+    "cliou_empty_policy": "include",
+    "empty_cts": 0
+  }
+}

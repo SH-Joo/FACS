@@ -6,9 +6,9 @@ import numpy as np
 def plot_datas(data_dict, logger, log='train'):
     base_dir = f"../logs/{logger.name}_v{logger.version}/"
     os.makedirs(base_dir, exist_ok=True)
-    
+
     json_path = os.path.join(base_dir, f"{log}_{logger.name}_v{logger.version}.json")
-    
+
     if os.path.exists(json_path):
         with open(json_path, "r") as f:
             saved_data = json.load(f)

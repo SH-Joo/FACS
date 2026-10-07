@@ -1,0 +1,174 @@
+{
+  "release": "FACS-Net v2.0.0",
+  "verified_at": "2026-10-07T12:25:48+09:00",
+  "base_github_commit": "eb0940eae202e21e4bd0e293123fd49157b0157f",
+  "unit_tests": {
+    "count": 62,
+    "passed": true
+  },
+  "core_executable_ast_equivalence": {
+    "facs/__init__.py": true,
+    "facs/__main__.py": true,
+    "facs/checkpoints.py": true,
+    "facs/data.py": true,
+    "facs/diagnostics.py": true,
+    "facs/engine.py": true,
+    "facs/losses.py": true,
+    "facs/metrics.py": true,
+    "facs/model.py": true
+  },
+  "historical_checkpoint": {
+    "source": "https://doi.org/10.6084/m9.figshare.29849432",
+    "figshare_file_id": 56999291,
+    "source_sha256": "e5b1600f27436bb311a9f1813256b1b760ba79a06b4bfdb5a50b8884d5eda9f2",
+    "source_size_bytes": 1941487428,
+    "verified_figshare_md5": "03bd2a96944f275f6abbaa5be7c6a34d",
+    "strict_state_entries": 513,
+    "reference_source_archive_sha256": "420facf5ea0547bbc6cd2850488da0319f832ff2f31502778bfd2649b8fced0b",
+    "train_parity_sample_ids": [
+      1,
+      2
+    ],
+    "max_abs_logit_difference": 0.0,
+    "threshold_mask_pixel_differences": 0,
+    "no_retraining_or_bn_recalibration": true
+  },
+  "released_code_validation_recheck": {
+    "historical": {
+      "count": 1200,
+      "all_group_scores_exactly_match": true,
+      "per_image_rows_exactly_match": true,
+      "groups_verified": [
+        "all",
+        "0_2",
+        "nonzero",
+        "8_16",
+        "16_32",
+        "4_8",
+        "2_4",
+        "zero",
+        "thick"
+      ],
+      "iou": 0.6696220439634912,
+      "cts": 0.6393379200889662,
+      "thin_iou": 0.519684684202277,
+      "thin_cts": 0.9549916830181236
+    },
+    "v2": {
+      "count": 1200,
+      "all_group_scores_exactly_match": true,
+      "per_image_rows_exactly_match": true,
+      "groups_verified": [
+        "all",
+        "0_2",
+        "nonzero",
+        "8_16",
+        "16_32",
+        "4_8",
+        "2_4",
+        "zero",
+        "thick"
+      ],
+      "iou": 0.6607607495941472,
+      "cts": 0.6890227190394528,
+      "thin_iou": 0.4307551305924019,
+      "thin_cts": 0.9495127640249623
+    }
+  },
+  "fresh_ct_training_check": {
+    "purpose": "Released CT recipe: fresh model, full batch, finite backward and optimizer step",
+    "train_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "batch_size": 12,
+    "seed": 0,
+    "test_used": false,
+    "initial_model_state_sha256": "0225862f98164d6d7821eb11496feebd1cbbc0f2384cb4612f4ace584bbb2b16",
+    "matches_original_run_initial_state": true,
+    "ct_coefficients": {
+      "bce": 0.5,
+      "soft_cts": 0.25,
+      "semeda": 0.25
+    },
+    "semeda_feature_weights": [
+      0,
+      1,
+      0
+    ],
+    "terms": {
+      "bce": 0.6201298236846924,
+      "soft_cts": 0.9927752614021301,
+      "semeda": 1.7647651433944702
+    },
+    "loss": 0.9994499683380127,
+    "gradient_norm_before_clip": 0.48175036907196045,
+    "all_gradients_finite": true,
+    "optimizer_step_completed": true
+  },
+  "verification_environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "cpu_threads": 4,
+    "source_hashes": {
+      "facs/__init__.py": "de5c902e44b45f92b9849620a2577ba6b8e64999fab1d2dfb3171e7f31322b50",
+      "facs/__main__.py": "9b9b1c32fefe4ce8aae3fae55497cce80e1ca26b6307729b129e301fbf61086f",
+      "facs/checkpoints.py": "761d71d7aad7de3f9f4013b308ed27aa696d12042d51a003e83f152216d267a5",
+      "facs/data.py": "de9019025cfc7f5750111b8623ee97276e0aaa65a61f2d1f5906d6c53eaefa39",
+      "facs/diagnostics.py": "341f3ea3da66ec26ae0445048de92ee5e6e1d0cbd7080f31d36a46ccf498112d",
+      "facs/engine.py": "2da7703d12f142dd06b3c0a4bd17fcb798d4d5b8140e01ff1dbb2d030cfc713c",
+      "facs/losses.py": "072c2db84b1e4d5e148949150a9eee7107cdfc11ffe4802c328c140f3d141986",
+      "facs/metrics.py": "ee33450173c24823adb02a3627ef07a6b5c24a64d1257686a747367304c5004d",
+      "facs/model.py": "d07b83a84917748af8dd54b74500c613af515dc34b320c7d4671fc38a0f51432"
+    },
+    "lock_sha256": "ccd17ebc73c2149bf2e198ce6c0f6ec7ce725ca5a90683466975ab3ea6b135b5"
+  },
+  "source_changes": "Explanatory comments and selected module docstrings shortened; core executable AST unchanged. Full-train BN export protocol labels updated.",
+  "weights_distribution": {
+    "historical": "Public Figshare checkpoint",
+    "new_segmentation": "By email request; no new weights included in Git"
+  },
+  "new_result_scope": {
+    "seed": 0,
+    "training_epochs": 30,
+    "split": "val",
+    "count": 1200,
+    "test_used": false,
+    "independent_seed_repeats": false
+  },
+  "release_source_sha256": {
+    "configs/cv12_ct_v2.json": "1e5133a8fbfd5ca1ca59525c7622e99d42f2ec6472a536e99a24a19f53c3a140",
+    "configs/cv12_legacy_inference.json": "99b3a2b7b02b210e50313a37431ab1924090e203a8462ad2e21b42f3376bd0c3",
+    "facs/__init__.py": "de5c902e44b45f92b9849620a2577ba6b8e64999fab1d2dfb3171e7f31322b50",
+    "facs/__main__.py": "9b9b1c32fefe4ce8aae3fae55497cce80e1ca26b6307729b129e301fbf61086f",
+    "facs/checkpoints.py": "761d71d7aad7de3f9f4013b308ed27aa696d12042d51a003e83f152216d267a5",
+    "facs/data.py": "de9019025cfc7f5750111b8623ee97276e0aaa65a61f2d1f5906d6c53eaefa39",
+    "facs/diagnostics.py": "341f3ea3da66ec26ae0445048de92ee5e6e1d0cbd7080f31d36a46ccf498112d",
+    "facs/engine.py": "2da7703d12f142dd06b3c0a4bd17fcb798d4d5b8140e01ff1dbb2d030cfc713c",
+    "facs/losses.py": "072c2db84b1e4d5e148949150a9eee7107cdfc11ffe4802c328c140f3d141986",
+    "facs/metrics.py": "ee33450173c24823adb02a3627ef07a6b5c24a64d1257686a747367304c5004d",
+    "facs/model.py": "d07b83a84917748af8dd54b74500c613af515dc34b320c7d4671fc38a0f51432",
+    "requirements-train.lock": "ccd17ebc73c2149bf2e198ce6c0f6ec7ce725ca5a90683466975ab3ea6b135b5",
+    "scripts/prepare_cv12.py": "124da5a940656e5ddf829bd2ec0fab6cda07e2a270bfb8349b0bce9ce9e7520a",
+    "scripts/recalibrate_batchnorm.py": "b1076450f26b689639ffdbdc96f62c343a9e423f38cacd4ace431fccb9d14422"
+  },
+  "result_file_sha256": {
+    "docs/results/historical_per_image.csv": "7656397300d0da8cd5bdbd52ca99f3fab3bf378dd7b4ec3150b8bde8f3199035",
+    "docs/results/historical_validation.json": "cf8a7db9d093a592b5a0cd3dc373879e4b29b8d6abe833bec6ce5d161e328dab",
+    "docs/results/v2_ct_per_image.csv": "75324849614d796cedc8b7d882d3cf04a18cf62bd004424a1cf4c79423a57888",
+    "docs/results/v2_ct_validation.json": "0fb74bdc9f305ffe3395dd7671b98b710190c08abf763dd137fafce942abbb67"
+  }
+}

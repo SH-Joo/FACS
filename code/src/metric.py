@@ -1,6 +1,6 @@
-###############################################
-# Imports and Global Constants
-###############################################
+
+
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -8,15 +8,13 @@ import torch.nn.functional as F
 from skimage.morphology import thin
 from skimage.measure import label
 from scipy.ndimage import binary_dilation
-import config  # External configuration module
+import config
 
-# Global constants
+
 ALPHA = 0.8
 GAMMA = 2
 
-###############################################
-# Basic Loss Functions
-###############################################
+
 class DiceLoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
         super(DiceLoss, self).__init__()
@@ -43,9 +41,7 @@ class DiceBCELoss(nn.Module):
         BCE = F.binary_cross_entropy_with_logits(inputs, targets, reduction='mean')
         return weight * BCE + (1 - weight) * dice_loss
 
-###############################################
-# Centerline Metrics: clIoU & clDice
-###############################################
+
 class clIoU_class(nn.Module):
     def __init__(self, dilation_radius=4):
         super(clIoU_class, self).__init__()
@@ -67,7 +63,7 @@ class clIoU_class(nn.Module):
                     pred_img = inputs_bin.cpu().numpy()[0]
                     gt_img   = targets_bin.cpu().numpy()[0]
 
-                # use thin instead of skeletonize
+
                 pred_skel = thin(pred_img.astype(bool)).astype(np.float32)
                 gt_skel   = thin(gt_img.astype(bool)).astype(np.float32)
                 structure = np.ones((2 * self.dilation_radius + 1, 2 * self.dilation_radius + 1))
@@ -135,9 +131,7 @@ def clDice(pred, y, px=4):
     fn = clDice_class(dilation_radius=px).to(pred.device)
     return fn(pred, y)
 
-###############################################
-# Soft Skeleton & SoftCLDice Metric
-###############################################
+
 def min_pool2d(x, kernel_size=3):
     return -F.max_pool2d(-x, kernel_size=kernel_size, stride=1, padding=kernel_size//2)
 
@@ -159,7 +153,7 @@ class SoftCLDice_class(nn.Module):
         self.iterations = iterations
         self.kernel_size = kernel_size
         self.eps = eps
-        
+
     def forward(self, pred, target):
         pred = F.sigmoid(pred)
         target = F.sigmoid(target)
@@ -217,20 +211,20 @@ class ct_dice(nn.Module):
         self.soft_skel = SoftSkeleton(kernel_size=sk_kernel, iterations=sk_iter)
 
     def forward(self, pred_logits: torch.Tensor, gt_mask: torch.Tensor) -> torch.Tensor:
-        # 1) probabilities
+
         pred_prob = torch.sigmoid(pred_logits)
         gt_prob   = gt_mask.float().unsqueeze(1)
 
-        # 2) soft skeletonization
+
         skel_pred = self.soft_skel(pred_prob)
         skel_gt   = self.soft_skel(gt_prob)
 
-        # 3) soft dilation buffers
+
         k = 2 * self.dilation_radius + 1
         pred_dil = torch_dilation(skel_pred, k)
         gt_dil   = torch_dilation(skel_gt,   k)
 
-        # 이하 원래 코드와 동일…
+
         B, C, H, W = skel_pred.shape
         Gx, Gy = self.grid_size
         xs = torch.linspace(0, W, steps=W, device=pred_logits.device)
@@ -252,20 +246,18 @@ class ct_dice(nn.Module):
 
         sum_p = seg_pred.sum(dim=[2,3])
         tp_p  = (seg_pred * gt_dil.unsqueeze(1)).sum(dim=[2,3])
-        PCS   = (tp_p / (sum_p + self.eps) * 
+        PCS   = (tp_p / (sum_p + self.eps) *
                  (sum_p / (sum_p.sum(1,keepdim=True)+self.eps))).sum(1)
 
         sum_g = seg_gt.sum(dim=[2,3])
         tp_g  = (seg_gt * pred_dil.unsqueeze(1)).sum(dim=[2,3])
-        RCS   = (tp_g / (sum_g + self.eps) * 
+        RCS   = (tp_g / (sum_g + self.eps) *
                  (sum_g / (sum_g.sum(1,keepdim=True)+self.eps))).sum(1)
 
         ct_dice = 2*PCS*RCS / (PCS + RCS + self.eps)
         return 1.0 - ct_dice.mean()
 
-###############################################
-# Connectivity Metrics: ct_dice & ct_iou
-###############################################
+
 def torch_dilation(x: torch.Tensor, kernel_size: int) -> torch.Tensor:
     """Morphological dilation via max-pooling."""
     pad = kernel_size // 2
@@ -293,20 +285,20 @@ class ct_dice(nn.Module):
         self.soft_skel = SoftSkeleton(kernel_size=sk_kernel, iterations=sk_iter)
 
     def forward(self, pred_logits: torch.Tensor, gt_mask: torch.Tensor) -> torch.Tensor:
-        # 1) probabilities
+
         pred_prob = torch.sigmoid(pred_logits)
         gt_prob   = gt_mask.float().unsqueeze(1)
 
-        # 2) soft skeletonization
+
         skel_pred = self.soft_skel(pred_prob)
         skel_gt   = self.soft_skel(gt_prob)
 
-        # 3) soft dilation buffers
+
         k = 2 * self.dilation_radius + 1
         pred_dil = torch_dilation(skel_pred, k)
         gt_dil   = torch_dilation(skel_gt,   k)
 
-        # 이하 원래 코드와 동일…
+
         B, C, H, W = skel_pred.shape
         Gx, Gy = self.grid_size
         xs = torch.linspace(0, W, steps=W, device=pred_logits.device)
@@ -328,23 +320,18 @@ class ct_dice(nn.Module):
 
         sum_p = seg_pred.sum(dim=[2,3])
         tp_p  = (seg_pred * gt_dil.unsqueeze(1)).sum(dim=[2,3])
-        PCS   = (tp_p / (sum_p + self.eps) * 
+        PCS   = (tp_p / (sum_p + self.eps) *
                  (sum_p / (sum_p.sum(1,keepdim=True)+self.eps))).sum(1)
 
         sum_g = seg_gt.sum(dim=[2,3])
         tp_g  = (seg_gt * pred_dil.unsqueeze(1)).sum(dim=[2,3])
-        RCS   = (tp_g / (sum_g + self.eps) * 
+        RCS   = (tp_g / (sum_g + self.eps) *
                  (sum_g / (sum_g.sum(1,keepdim=True)+self.eps))).sum(1)
 
         ct_dice = 2*PCS*RCS / (PCS + RCS + self.eps)
         return 1.0 - ct_dice.mean()
-# Example:
-# loss_fn = SegmentAwareCTLoss(dilation_radius=4, grid_size=(4,4))
-# loss = loss_fn(pred_logits, gt_mask)  c
 
-###############################################
-# Edge Metrics (unchanged)
-###############################################
+
 class EdgeAwareLoss(nn.Module):
     def __init__(self, reduction='mean'):
         super(EdgeAwareLoss, self).__init__()
@@ -425,9 +412,7 @@ class edgeDice(nn.Module):
 def edgeDiceMetric(pred, y, px=3):
     return edgeDice(dilation_radius=px).to(pred.device)(pred, y)
 
-###############################################
-# Compute Metrics for Multiple Dilation Radii
-###############################################
+
 def compute_multi_px_metrics(pred, y, px_list=[0,2,4,8], overlap_threshold=0.5):
     cliou_list  = []
     cldice_list = []

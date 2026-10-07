@@ -1,0 +1,72 @@
+{
+  "protocol": {
+    "id": "facs-cv12-historical-inference-v2",
+    "status": "locked",
+    "purpose": "Strict migration and evaluation of the published CV12 checkpoint",
+    "choices": [
+      "Published Figshare CV12.ckpt identity verified by size and MD5",
+      "Original architecture and uploaded normalization constants",
+      "No retraining or BatchNorm recalibration of historical weights",
+      "Strict state loading; fixed-affine LayerNorm and normalized FPCM"
+    ]
+  },
+  "model": {
+    "cnn_weights": null,
+    "norm_affine": false,
+    "cbam": true,
+    "fpcm": true,
+    "filter_mode": "normalized",
+    "cutoff_ratio": 0.25
+  },
+  "loss": {
+    "weights": {
+      "bce": 1
+    }
+  },
+  "data": {
+    "root": "data/CrackVision12K",
+    "mean": [
+      0.51789941,
+      0.51360926,
+      0.547762
+    ],
+    "std": [
+      0.1812099,
+      0.17746663,
+      0.20386334
+    ],
+    "augmentation": "none",
+    "verify_hashes": true
+  },
+  "training": {
+    "seed": 0,
+    "batch_size": 12,
+    "workers": 4,
+    "max_epochs": 1,
+    "lr": 5e-05,
+    "patience": 10,
+    "scheduler_patience": 3,
+    "scheduler_factor": 0.1,
+    "gradient_clip_norm": 1,
+    "precision": "fp32",
+    "deterministic": true,
+    "cpu_threads": 4
+  },
+  "evaluation": {
+    "threshold": 0.5,
+    "deltas": [
+      0,
+      2,
+      4,
+      8
+    ],
+    "cts_radius": 10,
+    "cts_threshold": 0.5,
+    "cts_mode": "legacy_exact",
+    "empty_iou": 1,
+    "empty_cliou": 1,
+    "cliou_skeleton": "thin",
+    "cliou_empty_policy": "include",
+    "empty_cts": 0
+  }
+}
